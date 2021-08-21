@@ -21,15 +21,21 @@ from sklearn.metrics import classification_report, confusion_matrix
 def score(y_true, y_pred):
     print(f"Classification Report \n {classification_report(y_true, y_pred)}")
     
-
 def load_posts():
+    import googletrans
     df = pd.read_csv('data/sentiment140/training.1600000.processed.noemoticon.csv', header=None, encoding='ISO-8859-1', names= ["target", "ids", "date", "flag", "user", "text"])
     print("sentiment140")
     print(df.head())
     sent_data = [(p, {0:0, 4:2}[t]) for p, t in df[['text', 'target']].to_numpy()]
-    #translate data...
+    pt_sent_data = []
+    translator = googletrans.Translator()
 
-    return sent_data
+    for sd in sent_data:
+        pt_post = translator.translate(sd[0], src='en', dest='pt').text
+        pt_sent_data.append((pt_post,sd[1]))
+
+    return pt_sent_data
+
 
  
 sentiment140_data = load_posts()
@@ -41,8 +47,6 @@ X, y =  Preprocess().fit_transform(X, y)
  
 X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, test_size=0.25, random_state=23)
  
-X_train += [l[0] for l in usefull_lexicons_+lexicons_]
-y_train += [l[1] for l in usefull_lexicons_+lexicons_]
 
 print(f"Proportion of classes on train set: {Counter(y_train)}")
 print(f"Proportion of classes on test set: {Counter(y_test)}")
