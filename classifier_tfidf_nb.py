@@ -29,9 +29,9 @@ def load_posts():
     sent_data = [(p, {0:0, 4:2}[t]) for p, t in df[['text', 'target']].to_numpy()]
     pt_sent_data = []
     translator = googletrans.Translator()
-
+    
     for sd in sent_data:
-        pt_post = translator.translate(sd[0], src='en', dest='pt').text
+        pt_post = translator.translate(sd[0], src='en', dest='pt').text   #translate each sentence to ptbr
         pt_sent_data.append((pt_post,sd[1]))
 
     return pt_sent_data
